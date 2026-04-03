@@ -11,18 +11,18 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #080f1e;
-  --bg2:       #0d1b30;
-  --card:      rgba(255,255,255,0.04);
-  --border:    rgba(255,255,255,0.10);
-  --accent:    #7c6fef;
-  --accent2:   #ffd93d;
-  --accent3:   #55efc4;
-  --danger:    #ff6b6b;
-  --text:      #e8f0fe;
-  --muted:     #7a94b0;
-  --radius:    20px;
-  --shadow:    0 8px 40px rgba(0,0,0,0.5);
+  --bg:         #080f1e;
+  --bg2:        #0d1b30;
+  --card:       rgba(255,255,255,0.04);
+  --border:     rgba(255,255,255,0.10);
+  --accent:     #7c6fef;
+  --accent2:    #ffd93d;
+  --accent3:    #55efc4;
+  --danger:     #ff6b6b;
+  --text:       #e8f0fe;
+  --muted:      #7a94b0;
+  --radius:     20px;
+  --shadow:     0 8px 40px rgba(0,0,0,0.5);
 }
 
 html, body {
@@ -33,1203 +33,295 @@ html, body {
   overflow-x: hidden;
 }
 
-/* ─── Animated Background ───────────────────────────────────── */
+/* ─── Restrição Desktop ───────────────────────────────────── */
+#mobile-only-overlay {
+  position: fixed; inset: 0; background: var(--bg); z-index: 10000;
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  padding: 30px; text-align: center;
+}
+@media (min-width: 1025px) {
+  #mobile-only-overlay { display: flex; }
+  .app-shell { display: none; }
+}
+
+/* ─── Background ─────────────────────────────────────────── */
 .bg-canvas {
   position: fixed; inset: 0; z-index: 0;
-  background:
-    radial-gradient(ellipse 60% 50% at 20% 20%, rgba(124,111,239,0.15) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 60% at 80% 80%, rgba(255,217,61,0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 60% 30%, rgba(85,239,196,0.06) 0%, transparent 60%),
-    var(--bg);
+  background: radial-gradient(ellipse 60% 50% at 20% 20%, rgba(124,111,239,0.15) 0%, transparent 70%), var(--bg);
   pointer-events: none;
 }
-.stars-layer {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-}
-.star {
-  position: absolute; border-radius: 50%; background: #fff;
-  animation: twinkle var(--dur, 3s) var(--delay, 0s) infinite alternate ease-in-out;
-}
-@keyframes twinkle {
-  from { opacity: 0.15; transform: scale(0.8); }
-  to   { opacity: 0.9;  transform: scale(1.3); }
-}
+.stars-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.star { position: absolute; border-radius: 50%; background: #fff; animation: twinkle 3s infinite alternate; }
+@keyframes twinkle { from { opacity: 0.2; } to { opacity: 0.8; } }
 
 /* ─── Layout ──────────────────────────────────────────────── */
-.app-shell {
-  position: relative; z-index: 1;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ─── Screens ─────────────────────────────────────────────── */
-.screen { display: none; }
+.app-shell { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+.screen { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
 .screen.active { display: flex; }
 
-/* ═══════════════════════════════════════════════════════════
-   HOME SCREEN
-══════════════════════════════════════════════════════════ */
-#screen-home {
-  min-height: 100vh;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 20px;
-  text-align: center;
-}
+/* ─── Home ─── */
+.home-logo { font-family: 'Fredoka One', cursive; font-size: clamp(2.5rem, 8vw, 5rem); background: linear-gradient(135deg, #ffd93d, #ff6b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+.home-config { width: 100%; max-width: 500px; background: var(--card); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 25px; backdrop-filter: blur(10px); }
+.pill-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+.pill { flex: 1; min-width: 80px; padding: 10px; border-radius: 12px; border: 2px solid var(--border); background: rgba(255,255,255,0.05); color: var(--muted); cursor: pointer; font-weight: bold; font-size: 0.85rem; }
+.pill.active { border-color: var(--accent); color: white; background: rgba(124,111,239,0.2); }
 
-.home-logo {
-  font-family: 'Fredoka One', cursive;
-  font-size: clamp(3rem, 9vw, 5.5rem);
-  line-height: 1;
-  background: linear-gradient(135deg, #ffd93d 0%, #ff6b6b 40%, #a29bfe 80%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 0 40px rgba(162,155,254,0.3));
-  animation: logoPop 0.8s cubic-bezier(.34,1.56,.64,1) both;
-  margin-bottom: 6px;
-}
-@keyframes logoPop {
-  from { opacity: 0; transform: scale(0.6) translateY(20px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
-}
+/* ─── Game ─── */
+.topbar { width: 100%; max-width: 600px; display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: 800; }
+.game-card { width: 100%; max-width: 600px; background: var(--card); border: 1.5px solid var(--border); border-radius: 28px; padding: 25px; text-align: center; }
+.seq-display { display: flex; justify-content: center; gap: 12px; margin: 20px 0; flex-wrap: wrap; align-items: center; }
+.seq-box { width: 65px; height: 65px; background: rgba(124,111,239,0.1); border: 2px solid var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 1.6rem; }
+.seq-box.blank { background: rgba(255,217,61,0.1); border-color: var(--accent2); color: var(--accent2); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-.home-tagline {
-  color: var(--muted);
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 48px;
-  animation: fadeUp 0.7s 0.2s both;
-}
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+.opt-btn { padding: 18px; border-radius: 15px; border: 2px solid var(--border); background: rgba(255,255,255,0.05); color: white; font-family: 'Fredoka One'; font-size: 1.6rem; cursor: pointer; transition: 0.2s; }
+.opt-btn.correct { background: rgba(85,239,196,0.3) !important; border-color: var(--accent3) !important; transform: scale(1.05); }
+.opt-btn.wrong { background: rgba(255,107,107,0.3) !important; border-color: var(--danger) !important; animation: shake 0.3s; }
 
-.home-features {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 48px;
-  animation: fadeUp 0.7s 0.35s both;
-}
-.feat-chip {
-  background: rgba(255,255,255,0.06);
-  border: 1.5px solid var(--border);
-  border-radius: 99px;
-  padding: 10px 22px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
-}
-.feat-chip:hover {
-  background: rgba(255,255,255,0.1);
-  transform: translateY(-2px);
-}
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
-/* Config panel on home */
-.home-config {
-  width: 100%; max-width: 520px;
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-  margin-bottom: 32px;
-  backdrop-filter: blur(16px);
-  animation: fadeUp 0.7s 0.45s both;
-}
-.config-title {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.1rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 18px;
-}
-.config-row {
-  margin-bottom: 20px;
-}
-.config-label {
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-  text-align: left;
-}
-.pill-group {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.pill {
-  flex: 1;
-  min-width: 80px;
-  background: rgba(255,255,255,0.05);
-  border: 2px solid rgba(255,255,255,0.12);
-  color: var(--muted);
-  border-radius: 12px;
-  padding: 10px 8px;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 800;
-  font-size: 0.88rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: center;
-}
-.pill:hover { background: rgba(255,255,255,0.1); color: var(--text); }
-.pill.active {
-  background: rgba(124,111,239,0.2);
-  border-color: var(--accent);
-  color: #fff;
-  box-shadow: 0 0 0 3px rgba(124,111,239,0.15);
-}
-.pill.diff-easy.active  { background: rgba(85,239,196,0.15); border-color: var(--accent3); }
-.pill.diff-mid.active   { background: rgba(255,217,61,0.15); border-color: var(--accent2); }
-.pill.diff-hard.active  { background: rgba(255,107,107,0.15); border-color: var(--danger); }
+.btn-next { width: 100%; margin-top: 20px; padding: 15px; border-radius: 50px; background: var(--accent); border: none; color: white; font-family: 'Fredoka One'; font-size: 1.2rem; cursor: pointer; display: none; }
+.btn-start { padding: 18px 50px; border-radius: 50px; background: var(--accent); border: none; color: white; font-family: 'Fredoka One'; font-size: 1.5rem; cursor: pointer; }
 
-.btn-start {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: linear-gradient(135deg, #7c6fef, #5f51d0);
-  border: none;
-  color: #fff;
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.4rem;
-  padding: 18px 56px;
-  border-radius: 99px;
-  cursor: pointer;
-  box-shadow: 0 8px 32px rgba(124,111,239,0.5);
-  transition: all 0.2s;
-  animation: fadeUp 0.7s 0.55s both;
-}
-.btn-start:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 14px 40px rgba(124,111,239,0.6);
-}
-.btn-start:active { transform: scale(0.97); }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   GAME SCREEN
-══════════════════════════════════════════════════════════ */
-#screen-game {
-  min-height: 100vh;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 16px 40px;
-}
-
-/* Top bar */
-.topbar {
-  width: 100%;
-  max-width: 780px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-.topbar-logo {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.4rem;
-  background: linear-gradient(135deg, #ffd93d, #a29bfe);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  flex: 1;
-}
-.topbar-stat {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,0.07);
-  border: 1.5px solid var(--border);
-  border-radius: 99px;
-  padding: 6px 16px;
-  font-weight: 800;
-  font-size: 0.95rem;
-}
-.topbar-stat .icon { font-size: 1.1rem; }
-
-/* Progress */
-.progress-wrap {
-  width: 100%;
-  max-width: 780px;
-  margin-bottom: 18px;
-}
-.progress-info {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--muted);
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.progress-bar {
-  height: 8px;
-  background: rgba(255,255,255,0.07);
-  border-radius: 99px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  border-radius: 99px;
-  transition: width 0.6s cubic-bezier(.4,0,.2,1);
-}
-
-/* Main game card */
-.game-card {
-  width: 100%;
-  max-width: 780px;
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 28px;
-  padding: clamp(20px, 4vw, 36px);
-  backdrop-filter: blur(20px);
-  box-shadow: var(--shadow);
-  animation: cardIn 0.4s cubic-bezier(.34,1.56,.64,1) both;
-}
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(30px) scale(0.96); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.q-type-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(124,111,239,0.15);
-  border: 1.5px solid rgba(124,111,239,0.35);
-  color: #a29bfe;
-  border-radius: 99px;
-  padding: 5px 16px;
-  font-weight: 800;
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-bottom: 14px;
-}
-
-.question-heading {
-  font-family: 'Fredoka One', cursive;
-  font-size: clamp(1.2rem, 3vw, 1.6rem);
-  color: var(--text);
-  margin-bottom: 24px;
-  line-height: 1.4;
-}
-
-/* ─── Number Line ─────────────────────────────────────────── */
-.nl-wrap {
-  background: rgba(0,0,0,0.25);
-  border: 1.5px solid rgba(255,255,255,0.07);
-  border-radius: 16px;
-  padding: 20px 10px;
-  margin-bottom: 28px;
-  overflow-x: auto;
-}
-.nl-wrap svg {
-  display: block;
-  width: 100%;
-  min-width: 340px;
-}
-
-/* ─── Sequence ────────────────────────────────────────────── */
-.seq-display {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 20px 0;
-  margin-bottom: 24px;
-}
-.seq-box {
-  width: 64px; height: 64px;
-  border-radius: 16px;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.5rem;
-  transition: all 0.3s;
-}
-.seq-box.num {
-  background: rgba(124,111,239,0.15);
-  border: 2px solid rgba(124,111,239,0.4);
-  color: #c4beff;
-}
-.seq-box.blank {
-  background: rgba(255,217,61,0.12);
-  border: 2.5px solid var(--accent2);
-  color: var(--accent2);
-  animation: blinkBorder 1s infinite alternate;
-  font-size: 1.8rem;
-}
-@keyframes blinkBorder {
-  from { box-shadow: 0 0 0 rgba(255,217,61,0); }
-  to   { box-shadow: 0 0 16px rgba(255,217,61,0.4); }
-}
-.seq-arrow {
-  color: rgba(255,255,255,0.2);
-  font-size: 1.4rem;
-  line-height: 1;
-  user-select: none;
-}
-
-/* ─── Options grid ────────────────────────────────────────── */
-.options-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-.opt-btn {
-  background: rgba(255,255,255,0.06);
-  border: 2px solid rgba(255,255,255,0.12);
-  color: #fff;
-  border-radius: 18px;
-  padding: 18px 12px;
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.7rem;
-  cursor: pointer;
-  transition: all 0.18s;
-  position: relative;
-  overflow: hidden;
-}
-.opt-btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: white;
-  opacity: 0;
-  transition: opacity 0.15s;
-  border-radius: inherit;
-}
-.opt-btn:hover:not(:disabled)::after { opacity: 0.05; }
-.opt-btn:hover:not(:disabled) {
-  border-color: var(--accent);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(124,111,239,0.35);
-}
-.opt-btn:active:not(:disabled) { transform: scale(0.97); }
-.opt-btn.correct {
-  background: rgba(85,239,196,0.2);
-  border-color: var(--accent3);
-  box-shadow: 0 0 24px rgba(85,239,196,0.35);
-  animation: popCorrect 0.45s ease;
-}
-.opt-btn.wrong {
-  background: rgba(255,107,107,0.2);
-  border-color: var(--danger);
-  animation: shake 0.4s ease;
-}
-@keyframes popCorrect {
-  0%   { transform: scale(1); }
-  40%  { transform: scale(1.09); }
-  100% { transform: scale(1); }
-}
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  20%,60% { transform: translateX(-7px); }
-  40%,80% { transform: translateX(7px); }
-}
-
-/* ─── Feedback strip ──────────────────────────────────────── */
-.feedback-strip {
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.25rem;
-  border-radius: 14px;
-  margin-bottom: 16px;
-  transition: all 0.3s;
-  padding: 0 16px;
-}
-.feedback-strip.correct {
-  background: rgba(85,239,196,0.12);
-  border: 1.5px solid rgba(85,239,196,0.3);
-  color: var(--accent3);
-}
-.feedback-strip.wrong {
-  background: rgba(255,107,107,0.12);
-  border: 1.5px solid rgba(255,107,107,0.3);
-  color: var(--danger);
-}
-
-/* ─── Next button ─────────────────────────────────────────── */
-.btn-next {
-  width: 100%;
-  background: linear-gradient(135deg, var(--accent), #5f51d0);
-  border: none;
-  color: #fff;
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.2rem;
-  padding: 16px;
-  border-radius: 99px;
-  cursor: pointer;
-  box-shadow: 0 6px 24px rgba(124,111,239,0.45);
-  transition: all 0.2s;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(8px);
-}
-.btn-next.visible {
-  opacity: 1;
-  pointer-events: all;
-  transform: translateY(0);
-}
-.btn-next:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(124,111,239,0.55); }
-
-/* ─── Hint box ────────────────────────────────────────────── */
-.hint-row {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-bottom: 12px;
-}
-.hint-btn {
-  background: transparent;
-  border: 1.5px solid var(--border);
-  color: var(--muted);
-  border-radius: 99px;
-  padding: 5px 14px;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 700;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex; align-items: center; gap: 5px;
-}
-.hint-btn:hover { border-color: var(--accent2); color: var(--accent2); }
-.hint-box {
-  background: rgba(255,217,61,0.1);
-  border: 1.5px solid rgba(255,217,61,0.3);
-  border-radius: 14px;
-  padding: 12px 16px;
-  color: var(--accent2);
-  font-weight: 700;
-  font-size: 0.9rem;
-  margin-bottom: 16px;
-  display: none;
-  animation: fadeUp 0.3s both;
-}
-
-/* ═══════════════════════════════════════════════════════════
-   RESULT SCREEN
-══════════════════════════════════════════════════════════ */
-#screen-result {
-  min-height: 100vh;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 20px;
-  text-align: center;
-}
-
-.result-emoji {
-  font-size: 5rem;
-  animation: bounceIn 0.6s cubic-bezier(.34,1.56,.64,1) both;
-  margin-bottom: 12px;
-  display: block;
-}
-@keyframes bounceIn {
-  from { transform: scale(0); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
-}
-.result-title {
-  font-family: 'Fredoka One', cursive;
-  font-size: clamp(2rem, 6vw, 3.2rem);
-  background: linear-gradient(135deg, #ffd93d, #ff6b6b, #a29bfe);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 8px;
-}
-.result-subtitle {
-  color: var(--muted);
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 36px;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  width: 100%;
-  max-width: 480px;
-  margin-bottom: 36px;
-  animation: fadeUp 0.5s 0.2s both;
-}
-.stat-card {
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 18px;
-  padding: 20px 12px;
-  text-align: center;
-}
-.stat-value {
-  font-family: 'Fredoka One', cursive;
-  font-size: 2rem;
-  color: #fff;
-  display: block;
-}
-.stat-label {
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 4px;
-}
-
-.result-bar-wrap {
-  width: 100%;
-  max-width: 480px;
-  margin-bottom: 36px;
-  animation: fadeUp 0.5s 0.3s both;
-}
-.result-bar-label {
-  display: flex; justify-content: space-between;
-  font-weight: 700; font-size: 0.85rem; color: var(--muted);
-  margin-bottom: 8px;
-}
-.result-bar {
-  height: 14px;
-  background: rgba(255,255,255,0.07);
-  border-radius: 99px;
-  overflow: hidden;
-}
-.result-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #7c6fef, #ffd93d);
-  border-radius: 99px;
-  transition: width 1s 0.5s cubic-bezier(.4,0,.2,1);
-}
-
-.result-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-  animation: fadeUp 0.5s 0.4s both;
-}
-.btn-action {
-  background: linear-gradient(135deg, var(--accent), #5f51d0);
-  border: none;
-  color: #fff;
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.1rem;
-  padding: 15px 36px;
-  border-radius: 99px;
-  cursor: pointer;
-  box-shadow: 0 6px 24px rgba(124,111,239,0.45);
-  transition: all 0.2s;
-}
-.btn-action:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(124,111,239,0.55); }
-.btn-action.secondary {
-  background: rgba(255,255,255,0.07);
-  border: 2px solid var(--border);
-  box-shadow: none;
-  color: var(--text);
-}
-.btn-action.secondary:hover { background: rgba(255,255,255,0.12); box-shadow: none; }
-
-/* ─── History table ───────────────────────────────────────── */
-.history-wrap {
-  width: 100%;
-  max-width: 480px;
-  margin-bottom: 32px;
-  animation: fadeUp 0.5s 0.35s both;
-}
-.history-title {
-  font-weight: 800;
-  font-size: 0.85rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
-}
-.history-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 14px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  margin-bottom: 6px;
-  font-size: 0.88rem;
-}
-.history-num { font-family: 'Fredoka One', cursive; font-size: 0.9rem; color: var(--muted); width: 22px; }
-.history-q   { flex: 1; font-weight: 700; color: var(--text); }
-.history-res { font-size: 1.1rem; }
-
-/* ─── Particles ───────────────────────────────────────────── */
-.particle {
-  position: fixed;
-  pointer-events: none;
-  font-size: 1.6rem;
-  z-index: 9999;
-  animation: particleFloat var(--dur, 1.2s) ease-out forwards;
-}
-@keyframes particleFloat {
-  from { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
-  to   { opacity: 0; transform: translate(var(--dx, 0), -120px) scale(1.4) rotate(var(--rot, 30deg)); }
-}
-
-/* ─── Lives ───────────────────────────────────────────────── */
-.lives-display { letter-spacing: 2px; }
-
-/* ─── Responsive ──────────────────────────────────────────── */
-@media (max-width: 520px) {
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-  .seq-box { width: 52px; height: 52px; font-size: 1.25rem; }
-  .opt-btn { font-size: 1.4rem; padding: 14px 10px; }
-  .topbar-stat { padding: 5px 12px; font-size: 0.85rem; }
-}
-@media (max-width: 380px) {
-  .options-grid { grid-template-columns: 1fr; }
-}
+/* Confetes */
+.confetti { position: fixed; width: 10px; height: 10px; z-index: 9999; animation: fall 3s linear forwards; }
+@keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
 </style>
 </head>
 <body>
+
+<div id="mobile-only-overlay">
+  <h1 style="font-family: 'Fredoka One'; color: var(--accent2);">📱 Use o Celular</h1>
+  <p style="color: var(--muted); margin-top: 10px;">Este jogo foi feito para telas de celular ou tablet.</p>
+</div>
 
 <div class="bg-canvas"></div>
 <div class="stars-layer" id="stars"></div>
 
 <div class="app-shell">
-
-<!-- ══════════════════════════════════════════════════
-     HOME SCREEN
-═══════════════════════════════════════════════════ -->
-<section class="screen active" id="screen-home">
-  <div class="home-logo">🔢 NúmeroQuest</div>
-  <div class="home-tagline">Reta Numérica & Sequências</div>
-
-  <div class="home-features">
-    <div class="feat-chip">📏 Reta Numérica</div>
-    <div class="feat-chip">🔗 Sequências</div>
-    <div class="feat-chip">⭐ Pontuação</div>
-    <div class="feat-chip">🔥 Streak</div>
-    <div class="feat-chip">💡 Dicas</div>
-  </div>
-
-  <div class="home-config">
-    <div class="config-title">Configurar Jogo</div>
-
-    <div class="config-row">
-      <div class="config-label">Modo de Jogo</div>
+  <!-- HOME -->
+  <section class="screen active" id="screen-home">
+    <div class="home-logo">🔢 NúmeroQuest</div>
+    <div class="home-config">
+      <p style="margin-bottom:10px; font-weight:bold; color:var(--muted)">MODO DE JOGO</p>
       <div class="pill-group" id="mode-pills">
-        <button class="pill active" data-mode="line">📏 Reta Numérica</button>
-        <button class="pill" data-mode="seq">🔗 Sequência</button>
-        <button class="pill" data-mode="mixed">🎲 Misto</button>
+        <button class="pill active" data-mode="line">Reta</button>
+        <button class="pill" data-mode="seq">Sequência</button>
+        <button class="pill" data-mode="neighbor">Vizinhos</button>
+        <button class="pill" data-mode="mixed">Misto</button>
       </div>
-    </div>
-
-    <div class="config-row">
-      <div class="config-label">Dificuldade</div>
+      <p style="margin-bottom:10px; font-weight:bold; color:var(--muted)">DIFICULDADE</p>
       <div class="pill-group" id="diff-pills">
-        <button class="pill diff-easy active" data-diff="1">😊 Fácil</button>
-        <button class="pill diff-mid"  data-diff="2">🤔 Médio</button>
-        <button class="pill diff-hard" data-diff="3">🔥 Difícil</button>
+        <button class="pill active" data-diff="1">Fácil (0-20)</button>
+        <button class="pill" data-diff="2">Médio (0-50)</button>
+        <button class="pill" data-diff="3">Difícil (0-100)</button>
       </div>
     </div>
+    <button class="btn-start" onclick="startGame()">▶ JOGAR</button>
+  </section>
 
-    <div class="config-row" style="margin-bottom:0">
-      <div class="config-label">Número de Perguntas</div>
-      <div class="pill-group" id="qcount-pills">
-        <button class="pill" data-qcount="5">5</button>
-        <button class="pill active" data-qcount="10">10</button>
-        <button class="pill" data-qcount="15">15</button>
-      </div>
+  <!-- GAME -->
+  <section class="screen" id="screen-game">
+    <div class="topbar">
+      <span>⭐ <span id="g-score">0</span></span>
+      <span>🔥 <span id="g-streak">0</span></span>
+      <span id="g-lives">❤️❤️❤️</span>
     </div>
-  </div>
-
-  <button class="btn-start" onclick="startGame()">▶ Jogar Agora</button>
-</section>
-
-<!-- ══════════════════════════════════════════════════
-     GAME SCREEN
-═══════════════════════════════════════════════════ -->
-<section class="screen" id="screen-game">
-
-  <div class="topbar">
-    <div class="topbar-logo">🔢 NúmeroQuest</div>
-    <div class="topbar-stat">
-      <span class="icon">⭐</span>
-      <span id="g-score">0</span>
+    <div class="game-card">
+      <h2 id="g-question" style="margin-bottom:15px; color: var(--accent2);"></h2>
+      <div id="g-game-area"></div>
+      <div class="options-grid" id="g-options"></div>
+      <button class="btn-next" id="g-next-btn" onclick="nextQuestion()">PRÓXIMA PERGUNTA →</button>
     </div>
-    <div class="topbar-stat">
-      <span class="icon">🔥</span>
-      <span id="g-streak">0</span>
-    </div>
-    <div class="topbar-stat lives-display" id="g-lives">❤️❤️❤️</div>
-  </div>
+  </section>
 
-  <div class="progress-wrap">
-    <div class="progress-info">
-      <span id="g-prog-label">Pergunta 0 de 10</span>
-      <span id="g-diff-label">😊 Fácil</span>
-    </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="g-prog-fill" style="width:0%"></div>
-    </div>
-  </div>
-
-  <div class="game-card" id="game-card">
-    <div class="q-type-badge" id="g-type-badge">📏 Reta Numérica</div>
-    <div class="question-heading" id="g-question"></div>
-
-    <div id="g-game-area"></div>
-
-    <div class="hint-row">
-      <button class="hint-btn" onclick="showHint()" id="hint-btn">💡 Dica</button>
-    </div>
-    <div class="hint-box" id="hint-box"></div>
-
-    <div class="options-grid" id="g-options"></div>
-
-    <div class="feedback-strip" id="g-feedback"></div>
-
-    <button class="btn-next" id="g-next-btn" onclick="nextQuestion()">Próxima Pergunta →</button>
-  </div>
-
-</section>
-
-<!-- ══════════════════════════════════════════════════
-     RESULT SCREEN
-═══════════════════════════════════════════════════ -->
-<section class="screen" id="screen-result">
-  <span class="result-emoji" id="r-emoji">🏆</span>
-  <div class="result-title" id="r-title">Incrível!</div>
-  <div class="result-subtitle" id="r-subtitle">Você arrasou nos números!</div>
-
-  <div class="stats-grid">
-    <div class="stat-card">
-      <span class="stat-value" id="r-score">0</span>
-      <div class="stat-label">Pontos</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-value" id="r-correct">0</span>
-      <div class="stat-label">Acertos</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-value" id="r-streak">0</span>
-      <div class="stat-label">Melhor Sequência</div>
-    </div>
-  </div>
-
-  <div class="result-bar-wrap">
-    <div class="result-bar-label">
-      <span>Aproveitamento</span>
-      <span id="r-pct">0%</span>
-    </div>
-    <div class="result-bar">
-      <div class="result-fill" id="r-fill" style="width:0%"></div>
-    </div>
-  </div>
-
-  <div class="history-wrap">
-    <div class="history-title">Histórico de Respostas</div>
-    <div id="r-history"></div>
-  </div>
-
-  <div class="result-actions">
-    <button class="btn-action" onclick="startGame()">🔄 Jogar de Novo</button>
-    <button class="btn-action secondary" onclick="goHome()">🏠 Início</button>
-  </div>
-</section>
-
-</div><!-- /.app-shell -->
+  <!-- RESULT -->
+  <section class="screen" id="screen-result">
+    <h1 style="font-family:'Fredoka One'; font-size: 3rem; color: var(--accent2);">VITÓRIA!</h1>
+    <p id="r-final-score" style="font-size: 1.5rem; margin: 20px 0;"></p>
+    <button class="btn-start" onclick="location.reload()">JOGAR NOVAMENTE</button>
+  </section>
+</div>
 
 <script>
-/* ══════════════════════════════════════════════════════════════
-   NúmeroQuest — Game Logic
-══════════════════════════════════════════════════════════════ */
+/* ─── Audio ─── */
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playSfx(freqs) {
+  const now = audioCtx.currentTime;
+  freqs.forEach((f, i) => {
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.connect(g); g.connect(audioCtx.destination);
+    osc.frequency.setValueAtTime(f, now + i * 0.1);
+    g.gain.setValueAtTime(0.1, now + i * 0.1);
+    g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.3);
+    osc.start(now + i * 0.1); osc.stop(now + i * 0.1 + 0.3);
+  });
+}
 
-// ── Stars ────────────────────────────────────────────────────
-(function buildStars(){
-  const layer=document.getElementById('stars');
-  for(let i=0;i<100;i++){
-    const s=document.createElement('div');
-    s.className='star';
-    const sz=Math.random()*2.4+0.4;
-    s.style.cssText=`
-      width:${sz}px;height:${sz}px;
-      top:${Math.random()*100}%;left:${Math.random()*100}%;
-      --dur:${2+Math.random()*3}s;--delay:${Math.random()*4}s`;
-    layer.appendChild(s);
+function spawnConfetti() {
+  for(let i=0; i<50; i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100+'vw';
+    c.style.background = `hsl(${Math.random()*360}, 80%, 60%)`;
+    c.style.animationDuration = (Math.random()*2 + 1) + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
   }
-})();
+}
 
-// ── Config state ──────────────────────────────────────────────
+/* ─── Lógica do Jogo ─── */
 let cfg = { mode:'line', diff:1, totalQ:10 };
+let gs = { score:0, streak:0, lives:3, qNum:0, answered:false };
 
-// Pill groups
-document.getElementById('mode-pills').addEventListener('click',e=>{
-  const btn=e.target.closest('[data-mode]'); if(!btn) return;
-  document.querySelectorAll('#mode-pills .pill').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active');
-  cfg.mode=btn.dataset.mode;
+document.querySelectorAll('.pill').forEach(p => {
+  p.onclick = () => {
+    p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    if(p.dataset.mode) cfg.mode = p.dataset.mode;
+    if(p.dataset.diff) cfg.diff = +p.dataset.diff;
+  };
 });
-document.getElementById('diff-pills').addEventListener('click',e=>{
-  const btn=e.target.closest('[data-diff]'); if(!btn) return;
-  document.querySelectorAll('#diff-pills .pill').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active');
-  cfg.diff=+btn.dataset.diff;
-});
-document.getElementById('qcount-pills').addEventListener('click',e=>{
-  const btn=e.target.closest('[data-qcount]'); if(!btn) return;
-  document.querySelectorAll('#qcount-pills .pill').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active');
-  cfg.totalQ=+btn.dataset.qcount;
-});
-
-// ── Game state ────────────────────────────────────────────────
-let gs = {};
 
 function startGame(){
-  gs = {
-    score: 0, streak: 0, bestStreak: 0,
-    lives: 3, qNum: 0, correctCount: 0,
-    history: [],
-    answered: false,
-    currentQ: null,
-    hintUsed: false,
-  };
-  showScreen('game');
-  updateTopbar();
+  gs = { score:0, streak:0, lives:3, qNum:0, answered:false };
+  document.getElementById('screen-home').classList.remove('active');
+  document.getElementById('screen-game').classList.add('active');
   nextQuestion();
 }
 
-function goHome(){
-  showScreen('home');
-}
-
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+id).classList.add('active');
-}
-
-// ── Topbar ────────────────────────────────────────────────────
-function updateTopbar(){
-  document.getElementById('g-score').textContent   = gs.score;
-  document.getElementById('g-streak').textContent  = gs.streak;
-  document.getElementById('g-lives').textContent   = '❤️'.repeat(Math.max(0,gs.lives));
-  const pct = gs.qNum / cfg.totalQ * 100;
-  document.getElementById('g-prog-fill').style.width = pct+'%';
-  document.getElementById('g-prog-label').textContent =
-    `Pergunta ${gs.qNum} de ${cfg.totalQ}`;
-  const diffLabels={1:'😊 Fácil',2:'🤔 Médio',3:'🔥 Difícil'};
-  document.getElementById('g-diff-label').textContent = diffLabels[cfg.diff];
-}
-
-// ── Helpers ───────────────────────────────────────────────────
-const ri = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
-const shuffle = arr => [...arr].sort(()=>Math.random()-0.5);
-
-function diffParams(){
-  if(cfg.diff===1) return { min:0, max:20, steps:[1] };
-  if(cfg.diff===2) return { min:0, max:50, steps:[1,2,5] };
-  return               { min:0, max:100, steps:[2,5,10] };
-}
-
-// ── Question makers ───────────────────────────────────────────
-function makeLineQ(){
-  const {min,max,steps}=diffParams();
-  const step=steps[ri(0,steps.length-1)];
-  const winSize=ri(6,10);
-  const start=ri(min, max-winSize*step);
-  const ticks=[];
-  for(let i=0;i<winSize;i++) ticks.push(start+i*step);
-  const hiddenIdx=ri(1,ticks.length-2);
-  const answer=ticks[hiddenIdx];
-  const wrong=new Set();
-  while(wrong.size<3){
-    const d=(ri(1,4))*(Math.random()<0.5?-1:1)*step;
-    const w=answer+d;
-    if(w!==answer && w>=min-step*2) wrong.add(w);
+function makeQ() {
+  let mode = cfg.mode;
+  if (mode === 'mixed') {
+    const modes = ['line', 'seq', 'neighbor'];
+    mode = modes[Math.floor(Math.random() * modes.length)];
   }
-  const options=shuffle([answer,...wrong]);
-  const hint=`Os números aumentam de ${step} em ${step}. O número anterior é ${ticks[hiddenIdx-1]} e o próximo é ${ticks[hiddenIdx+1]}.`;
-  return {
-    type:'line', ticks, hiddenIdx, answer, options, step, hint,
-    question:'Qual número está no ponto <span style="color:var(--accent2)">amarelo ❓</span>?',
-    shortQ:'Reta Numérica'
-  };
-}
 
-function makeSeqQ(){
-  const {min,max,steps}=diffParams();
-  const step=steps[ri(0,steps.length-1)];
-  const len=ri(5,7);
-  const start=ri(min, max-len*step);
-  const seq=[];
-  for(let i=0;i<len;i++) seq.push(start+i*step);
-  const hideIdx=ri(1,len-2);
-  const answer=seq[hideIdx];
-  const wrong=new Set();
-  while(wrong.size<3){
-    const d=(ri(1,4))*(Math.random()<0.5?-1:1)*step;
-    const w=answer+d;
-    if(w!==answer && w>=0) wrong.add(w);
-  }
-  const options=shuffle([answer,...wrong]);
-  const hint=`A sequência aumenta de ${step} em ${step}. Anterior: ${seq[hideIdx-1]}, Próximo: ${seq[hideIdx+1]}.`;
-  return {
-    type:'seq', seq, hideIdx, answer, options, step, hint,
-    question:'Qual número completa a <span style="color:var(--accent2)">lacuna ❓</span>?',
-    shortQ:'Sequência Numérica'
-  };
-}
+  const range = cfg.diff === 1 ? 20 : (cfg.diff === 2 ? 50 : 100);
+  const step = cfg.diff === 1 ? 1 : (cfg.diff === 2 ? [1,2,5][Math.floor(Math.random()*3)] : [2,5,10][Math.floor(Math.random()*3)]);
+  
+  let start = Math.floor(Math.random() * (range - 10)) + 1;
+  let fullSeq = Array.from({length:6}, (_, i) => start + i * step);
+  let hideIdx = Math.floor(Math.random() * 4) + 1;
+  let ans, opts, questionText;
 
-function makeQ(){
-  const actualMode = cfg.mode==='mixed'
-    ? (Math.random()<0.5?'line':'seq')
-    : cfg.mode;
-  return actualMode==='line' ? makeLineQ() : makeSeqQ();
-}
-
-// ── Next question ─────────────────────────────────────────────
-function nextQuestion(){
-  if(gs.qNum>=cfg.totalQ || gs.lives<=0){ showResult(); return; }
-
-  gs.answered = false;
-  gs.hintUsed = false;
-  gs.currentQ = makeQ();
-
-  // Reset UI
-  document.getElementById('g-feedback').className='feedback-strip';
-  document.getElementById('g-feedback').innerHTML='';
-  document.getElementById('g-next-btn').classList.remove('visible');
-  document.getElementById('hint-box').style.display='none';
-  document.getElementById('hint-btn').disabled=false;
-
-  // Animate card
-  const card=document.getElementById('game-card');
-  card.style.animation='none';
-  card.offsetHeight; // reflow
-  card.style.animation='cardIn 0.4s cubic-bezier(.34,1.56,.64,1) both';
-
-  const q=gs.currentQ;
-  document.getElementById('g-type-badge').innerHTML=
-    (q.type==='line'?'📏':'🔗')+' '+q.shortQ;
-  document.getElementById('g-question').innerHTML=q.question;
-
-  // Render game area
-  if(q.type==='line') renderLine(q);
-  else renderSeq(q);
-
-  renderOptions(q);
-  updateTopbar();
-}
-
-// ── Render Number Line ────────────────────────────────────────
-function renderLine(q){
-  const {ticks,hiddenIdx}=q;
-  const W=700, H=110, PAD=44;
-  const usable=W-PAD*2;
-  const n=ticks.length;
-  const spacing=usable/(n-1);
-
-  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <filter id="glow"><feGaussianBlur stdDeviation="4" result="blur"/>
-  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-</defs>`;
-
-  // Line
-  svg+=`<line x1="${PAD}" y1="${H/2}" x2="${W-PAD}" y2="${H/2}"
-        stroke="rgba(255,255,255,0.18)" stroke-width="3" stroke-linecap="round"/>`;
-  // Left arrow
-  svg+=`<polygon points="${PAD-18},${H/2} ${PAD-2},${H/2-7} ${PAD-2},${H/2+7}"
-        fill="rgba(255,255,255,0.2)"/>`;
-  // Right arrow
-  svg+=`<polygon points="${W-PAD+18},${H/2} ${W-PAD+2},${H/2-7} ${W-PAD+2},${H/2+7}"
-        fill="rgba(255,255,255,0.2)"/>`;
-
-  for(let i=0;i<n;i++){
-    const x=PAD+i*spacing;
-    const isH=i===hiddenIdx;
-    // Tick
-    svg+=`<line x1="${x}" y1="${H/2-12}" x2="${x}" y2="${H/2+12}"
-          stroke="${isH?'#ffd93d':'rgba(255,255,255,0.25)'}"
-          stroke-width="${isH?3:2}" stroke-linecap="round"/>`;
-    if(isH){
-      // Glowing dot
-      svg+=`<circle cx="${x}" cy="${H/2}" r="9" fill="#ffd93d" filter="url(#glow)"/>`;
-      // Question label above
-      svg+=`<text x="${x}" y="${H/2-28}"
-            font-family="'Fredoka One',cursive" font-size="22"
-            fill="#ffd93d" text-anchor="middle" dominant-baseline="middle"
-            filter="url(#glow)">?</text>`;
+  if (mode === 'neighbor') {
+    const baseNum = Math.floor(Math.random() * (range - 2)) + 1;
+    const isSuccessor = Math.random() > 0.5;
+    if (isSuccessor) {
+      ans = baseNum + 1;
+      questionText = `Quem é o SUCESSOR de ${baseNum}?`;
+      fullSeq = [baseNum, '❓'];
     } else {
-      svg+=`<text x="${x}" y="${H/2+30}"
-            font-family="'Fredoka One',cursive" font-size="15"
-            fill="rgba(200,220,240,0.85)" text-anchor="middle" dominant-baseline="middle">${ticks[i]}</text>`;
+      ans = baseNum - 1;
+      questionText = `Quem é o ANTECESSOR de ${baseNum}?`;
+      fullSeq = ['❓', baseNum];
     }
-  }
-
-  svg+='</svg>';
-  document.getElementById('g-game-area').innerHTML=
-    `<div class="nl-wrap">${svg}</div>`;
-}
-
-// ── Render Sequence ───────────────────────────────────────────
-function renderSeq(q){
-  const {seq,hideIdx}=q;
-  let html='<div class="seq-display">';
-  for(let i=0;i<seq.length;i++){
-    if(i>0) html+=`<div class="seq-arrow">→</div>`;
-    if(i===hideIdx){
-      html+=`<div class="seq-box blank">?</div>`;
-    } else {
-      html+=`<div class="seq-box num">${seq[i]}</div>`;
-    }
-  }
-  html+='</div>';
-  document.getElementById('g-game-area').innerHTML=html;
-}
-
-// ── Render Options ────────────────────────────────────────────
-function renderOptions(q){
-  const area=document.getElementById('g-options');
-  area.innerHTML='';
-  q.options.forEach(opt=>{
-    const btn=document.createElement('button');
-    btn.className='opt-btn';
-    btn.textContent=opt;
-    btn.addEventListener('click',()=>checkAnswer(opt,q,btn));
-    area.appendChild(btn);
-  });
-}
-
-// ── Check Answer ──────────────────────────────────────────────
-function checkAnswer(chosen,q,btn){
-  if(gs.answered) return;
-  gs.answered=true;
-
-  const correct=chosen===q.answer;
-  const allBtns=document.querySelectorAll('.opt-btn');
-  allBtns.forEach(b=>{ b.disabled=true; if(+b.textContent===q.answer) b.classList.add('correct'); });
-
-  const fb=document.getElementById('g-feedback');
-
-  if(correct){
-    btn.classList.add('correct');
-    const bonus = gs.streak>=4 ? 3 : gs.streak>=2 ? 2 : 1;
-    const pts = 10 * bonus * (gs.hintUsed?0.5:1);
-    gs.score += Math.round(pts);
-    gs.streak++;
-    gs.bestStreak = Math.max(gs.bestStreak,gs.streak);
-    gs.correctCount++;
-    const msgs=['Incrível! 🎉','Arrasei! ⭐','Show de bola! 🌟','Top demais! 🚀','Brilhante! 💡','Perfeito! 🎯'];
-    const msg=msgs[ri(0,msgs.length-1)];
-    fb.className='feedback-strip correct';
-    const streakText=gs.streak>1?` 🔥 Sequência de ${gs.streak}!`:'';
-    fb.textContent=msg+streakText;
-    spawnParticles(btn);
+    hideIdx = fullSeq.indexOf('❓');
   } else {
-    btn.classList.add('wrong');
-    gs.streak=0;
-    gs.lives--;
-    fb.className='feedback-strip wrong';
-    fb.textContent=`Ops! A resposta era ${q.answer} 😅`;
+    ans = fullSeq[hideIdx];
+    questionText = mode === 'line' ? "Complete a Reta Numérica:" : "Qual número falta na sequência?";
   }
 
-  gs.history.push({
-    q: q.type==='line'
-      ? `Reta: posição entre ${q.ticks[q.hiddenIdx-1]} e ${q.ticks[q.hiddenIdx+1]}`
-      : `Sequência: …${q.seq[q.hideIdx-1]}, ?, ${q.seq[q.hideIdx+1]}…`,
-    correct, given: chosen, ans: q.answer
-  });
+  // Gerar opções erradas únicas
+  let wrong = new Set();
+  while(wrong.size < 3) {
+    let w = ans + (Math.floor(Math.random() * 7) - 3);
+    if (w !== ans && w >= 0) wrong.add(w);
+  }
+  opts = [ans, ...wrong].sort(() => Math.random() - 0.5);
 
+  return { type: mode, seq: fullSeq, ans, opts, hideIdx, questionText };
+}
+
+function nextQuestion() {
+  if(gs.lives <= 0 || gs.qNum >= cfg.totalQ) return showResult();
   gs.qNum++;
-  updateTopbar();
+  gs.answered = false;
+  const q = makeQ();
+  gs.currentQ = q;
 
-  const nextBtn=document.getElementById('g-next-btn');
-  nextBtn.textContent = (gs.qNum>=cfg.totalQ||gs.lives<=0) ? '🏆 Ver Resultado' : 'Próxima Pergunta →';
-  nextBtn.classList.add('visible');
+  document.getElementById('g-score').textContent = gs.score;
+  document.getElementById('g-streak').textContent = gs.streak;
+  document.getElementById('g-lives').textContent = '❤️'.repeat(gs.lives);
+  document.getElementById('g-next-btn').style.display = 'none';
+  document.getElementById('g-question').textContent = q.questionText;
+
+  const area = document.getElementById('g-game-area');
+  area.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'seq-display';
+  
+  q.seq.forEach((n, i) => {
+    const b = document.createElement('div');
+    b.className = (n === '❓' || i === q.hideIdx) ? 'seq-box blank' : 'seq-box';
+    b.textContent = (n === '❓' || i === q.hideIdx) ? '?' : n;
+    wrap.appendChild(b);
+    if(q.type === 'line' && i < q.seq.length - 1) {
+        const line = document.createElement('span');
+        line.innerHTML = '—';
+        line.style.color = 'var(--border)';
+        wrap.appendChild(line);
+    }
+  });
+  area.appendChild(wrap);
+
+  const optsArea = document.getElementById('g-options');
+  optsArea.innerHTML = '';
+  q.opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = o;
+    btn.onclick = () => check(o, btn);
+    optsArea.appendChild(btn);
+  });
 }
 
-// ── Hint ──────────────────────────────────────────────────────
-function showHint(){
-  if(gs.answered || !gs.currentQ) return;
-  const box=document.getElementById('hint-box');
-  box.textContent='💡 '+gs.currentQ.hint;
-  box.style.display='block';
-  document.getElementById('hint-btn').disabled=true;
-  gs.hintUsed=true;
+function check(val, btn) {
+  if(gs.answered) return;
+  gs.answered = true;
+  const isCorrect = val === gs.currentQ.ans;
+
+  if(isCorrect) {
+    playSfx([523, 659, 783]); 
+    btn.classList.add('correct');
+    gs.score += 10 + (gs.streak * 2);
+    gs.streak++;
+  } else {
+    playSfx([220, 180]); 
+    btn.classList.add('wrong');
+    gs.lives--;
+    gs.streak = 0;
+    // Mostrar a correta
+    Array.from(document.querySelectorAll('.opt-btn')).forEach(b => {
+        if(parseInt(b.textContent) === gs.currentQ.ans) b.classList.add('correct');
+    });
+  }
+  
+  document.getElementById('g-next-btn').style.display = 'block';
 }
 
-// ── Particles ─────────────────────────────────────────────────
-function spawnParticles(btn){
-  const r=btn.getBoundingClientRect();
-  const cx=r.left+r.width/2, cy=r.top+r.height/2;
-  const emojis=['⭐','🎉','✨','🌟','💫','🎊'];
-  for(let i=0;i<8;i++){
-    const p=document.createElement('div');
-    p.className='particle';
-    p.textContent=emojis[ri(0,emojis.length-1)];
-    const dx=(Math.random()-0.5)*120;
-    const rot=(Math.random()-0.5)*60;
-    p.style.cssText=`left:${cx}px;top:${cy}px;--dx:${dx}px;--rot:${rot}deg;--dur:${0.9+Math.random()*0.5}s;animation-delay:${i*0.05}s`;
-    document.body.appendChild(p);
-    setTimeout(()=>p.remove(),1800);
+function showResult() {
+  document.getElementById('screen-game').classList.remove('active');
+  document.getElementById('screen-result').classList.add('active');
+  document.getElementById('r-final-score').textContent = `Pontuação Final: ${gs.score}`;
+  if(gs.score >= (cfg.totalQ * 5)) {
+    playSfx([523, 659, 783, 1046]);
+    spawnConfetti();
   }
 }
 
-// ── Result ────────────────────────────────────────────────────
-function showResult(){
-  const total=cfg.totalQ;
-  const pct=Math.round((gs.correctCount/total)*100);
-
-  let emoji='😢', title='Continue Praticando!', sub='Não desista, tente de novo!';
-  if(pct>=90){ emoji='🏆'; title='Você É Incrível!'; sub='Desempenho perfeito nos números!'; }
-  else if(pct>=75){ emoji='🌟'; title='Muito Bem!'; sub='Quase perfeito! Continue assim!'; }
-  else if(pct>=55){ emoji='👍'; title='Bom Trabalho!'; sub='Você está progredindo!'; }
-  else if(pct>=35){ emoji='🙂'; title='Vai Melhorar!'; sub='Cada erro é uma lição!'; }
-
-  document.getElementById('r-emoji').textContent=emoji;
-  document.getElementById('r-title').textContent=title;
-  document.getElementById('r-subtitle').textContent=sub;
-  document.getElementById('r-score').textContent=gs.score;
-  document.getElementById('r-correct').textContent=`${gs.correctCount}/${total}`;
-  document.getElementById('r-streak').textContent=gs.bestStreak;
-  document.getElementById('r-pct').textContent=pct+'%';
-
-  // Animate bar after transition
-  setTimeout(()=>{
-    document.getElementById('r-fill').style.width=pct+'%';
-  }, 300);
-
-  // History
-  const hist=document.getElementById('r-history');
-  hist.innerHTML='';
-  gs.history.slice(-8).forEach((h,i)=>{
-    const row=document.createElement('div');
-    row.className='history-row';
-    row.innerHTML=`<span class="history-num">#${i+1}</span>
-      <span class="history-q">${h.q}</span>
-      <span class="history-res">${h.correct?'✅':'❌'}</span>`;
-    hist.appendChild(row);
-  });
-
-  showScreen('result');
+// Estrelas de fundo
+for(let i=0; i<35; i++){
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.left = Math.random()*100+'%';
+  s.style.top = Math.random()*100+'%';
+  const size = Math.random()*3+'px';
+  s.style.width = size; s.style.height = size;
+  document.getElementById('stars').appendChild(s);
 }
 </script>
 </body>
