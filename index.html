@@ -87,6 +87,16 @@ html, body {
 /* Confetes */
 .confetti { position: fixed; width: 10px; height: 10px; z-index: 9999; animation: fall 3s linear forwards; }
 @keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+
+.dev-footer {
+  margin-top: 30px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
 </style>
 </head>
 <body>
@@ -119,6 +129,9 @@ html, body {
       </div>
     </div>
     <button class="btn-start" onclick="startGame()">▶ JOGAR</button>
+    <div class="dev-footer">
+      Desenvolvido por Sebastião Alves de Almeida
+    </div>
   </section>
 
   <!-- GAME -->
